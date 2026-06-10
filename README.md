@@ -6,7 +6,8 @@ Player estático para GitHub Pages: **voz** e **violão** tocam em simultâneo, 
 
 ## Conteúdo
 
-- `index.html` — player dual (GitHub Pages)
+- `index.html` — player dual com capa de fundo (GitHub Pages)
+- `assets/capa.jpg` — capa oficial do álbum (Cover Art Archive)
 - `manifest.json` — lista de faixas
 - `NN Nome da Música [...]/vocals.mp3` — stem de voz
 - `NN Nome da Música [...]/guitar.mp3` — stem de violão
