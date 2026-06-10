@@ -8,7 +8,8 @@
       "title": "Modinha",
       "folder": "01 Modinha [Raphael Rabello & Ney Matogrosso ]",
       "vocals": "01 Modinha [Raphael Rabello & Ney Matogrosso ]/vocals.mp3",
-      "guitar": "01 Modinha [Raphael Rabello & Ney Matogrosso ]/guitar.mp3"
+      "guitar": "01 Modinha [Raphael Rabello & Ney Matogrosso ]/guitar.mp3",
+      "duration_sec": 161.63
     },
     {
       "id": "02  Retrato em Branco e Preto [Raphael Rabello & Ney Matogrosso]",
@@ -16,7 +17,8 @@
       "title": "Retrato em Branco e Preto",
       "folder": "02  Retrato em Branco e Preto [Raphael Rabello & Ney Matogrosso]",
       "vocals": "02  Retrato em Branco e Preto [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "02  Retrato em Branco e Preto [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "02  Retrato em Branco e Preto [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 158.5
     },
     {
       "id": "03 Molambo [Raphael Rabello & Ney Matogrosso]",
@@ -24,7 +26,8 @@
       "title": "Molambo",
       "folder": "03 Molambo [Raphael Rabello & Ney Matogrosso]",
       "vocals": "03 Molambo [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "03 Molambo [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "03 Molambo [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 104.4
     },
     {
       "id": "04 Tristeza do Jeca [Raphael Rabello & Ney Matogrosso]",
@@ -32,7 +35,8 @@
       "title": "Tristeza do Jeca",
       "folder": "04 Tristeza do Jeca [Raphael Rabello & Ney Matogrosso]",
       "vocals": "04 Tristeza do Jeca [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "04 Tristeza do Jeca [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "04 Tristeza do Jeca [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 216.76
     },
     {
       "id": "05 Da Cor do Pecado [Raphael Rabello & Ney Matogrosso]",
@@ -40,7 +44,8 @@
       "title": "Da Cor do Pecado",
       "folder": "05 Da Cor do Pecado [Raphael Rabello & Ney Matogrosso]",
       "vocals": "05 Da Cor do Pecado [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "05 Da Cor do Pecado [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "05 Da Cor do Pecado [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 133.68
     },
     {
       "id": "06 No Rancho Fundo [Raphael Rabello & Ney Matogrosso]",
@@ -48,7 +53,8 @@
       "title": "No Rancho Fundo",
       "folder": "06 No Rancho Fundo [Raphael Rabello & Ney Matogrosso]",
       "vocals": "06 No Rancho Fundo [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "06 No Rancho Fundo [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "06 No Rancho Fundo [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 245.39
     },
     {
       "id": "07 Último Desejo [Raphael Rabello & Ney Matogrosso]",
@@ -56,7 +62,8 @@
       "title": "Último Desejo",
       "folder": "07 Último Desejo [Raphael Rabello & Ney Matogrosso]",
       "vocals": "07 Último Desejo [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "07 Último Desejo [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "07 Último Desejo [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 231.74
     },
     {
       "id": "08 O Mundo É Um Moinho [Raphael Rabello & Ney Matogrosso]",
@@ -64,7 +71,8 @@
       "title": "O Mundo É Um Moinho",
       "folder": "08 O Mundo É Um Moinho [Raphael Rabello & Ney Matogrosso]",
       "vocals": "08 O Mundo É Um Moinho [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "08 O Mundo É Um Moinho [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "08 O Mundo É Um Moinho [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 178.89
     },
     {
       "id": "09 As Rosas Não Falam [Raphael Rabello & Ney Matogrosso]",
@@ -72,7 +80,8 @@
       "title": "As Rosas Não Falam",
       "folder": "09 As Rosas Não Falam [Raphael Rabello & Ney Matogrosso]",
       "vocals": "09 As Rosas Não Falam [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "09 As Rosas Não Falam [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "09 As Rosas Não Falam [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 128.55
     },
     {
       "id": "10 Autonomia [Raphael Rabello & Ney Matogrosso]",
@@ -80,7 +89,8 @@
       "title": "Autonomia",
       "folder": "10 Autonomia [Raphael Rabello & Ney Matogrosso]",
       "vocals": "10 Autonomia [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "10 Autonomia [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "10 Autonomia [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 139.32
     },
     {
       "id": "11 Prelúdio No.3 (Prelúdio da Solidão) [Raphael Rabello & Ney Matogrosso]",
@@ -88,7 +98,8 @@
       "title": "Prelúdio No.3 (Prelúdio da Solidão)",
       "folder": "11 Prelúdio No.3 (Prelúdio da Solidão) [Raphael Rabello & Ney Matogrosso]",
       "vocals": "11 Prelúdio No.3 (Prelúdio da Solidão) [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "11 Prelúdio No.3 (Prelúdio da Solidão) [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "11 Prelúdio No.3 (Prelúdio da Solidão) [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 252.05
     },
     {
       "id": "12 Três Apitos [Raphael Rabello & Ney Matogrosso]",
@@ -96,7 +107,8 @@
       "title": "Três Apitos",
       "folder": "12 Três Apitos [Raphael Rabello & Ney Matogrosso]",
       "vocals": "12 Três Apitos [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "12 Três Apitos [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "12 Três Apitos [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 164.17
     },
     {
       "id": "14 Negue [Raphael Rabello & Ney Matogrosso]",
@@ -104,7 +116,8 @@
       "title": "Negue",
       "folder": "14 Negue [Raphael Rabello & Ney Matogrosso]",
       "vocals": "14 Negue [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "14 Negue [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "14 Negue [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 97.62
     },
     {
       "id": "15 Na Baixa do Sapateiro [Raphael Rabello & Ney Matogrosso]",
@@ -112,7 +125,8 @@
       "title": "Na Baixa do Sapateiro",
       "folder": "15 Na Baixa do Sapateiro [Raphael Rabello & Ney Matogrosso]",
       "vocals": "15 Na Baixa do Sapateiro [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "15 Na Baixa do Sapateiro [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "15 Na Baixa do Sapateiro [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 231.78
     },
     {
       "id": "16 Vereda Tropical [Raphael Rabello & Ney Matogrosso]",
@@ -120,7 +134,8 @@
       "title": "Vereda Tropical",
       "folder": "16 Vereda Tropical [Raphael Rabello & Ney Matogrosso]",
       "vocals": "16 Vereda Tropical [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "16 Vereda Tropical [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "16 Vereda Tropical [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 163.98
     },
     {
       "id": "17 Balada do Louco [Raphael Rabello & Ney Matogrosso]",
@@ -128,7 +143,8 @@
       "title": "Balada do Louco",
       "folder": "17 Balada do Louco [Raphael Rabello & Ney Matogrosso]",
       "vocals": "17 Balada do Louco [Raphael Rabello & Ney Matogrosso]/vocals.mp3",
-      "guitar": "17 Balada do Louco [Raphael Rabello & Ney Matogrosso]/guitar.mp3"
+      "guitar": "17 Balada do Louco [Raphael Rabello & Ney Matogrosso]/guitar.mp3",
+      "duration_sec": 222.31
     }
   ]
 }

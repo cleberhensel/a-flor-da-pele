@@ -34,7 +34,24 @@ echo "==> Gerando manifest.json…"
 python3 - <<'PY'
 import json
 import re
+import subprocess
 from pathlib import Path
+
+def mp3_duration(path: Path) -> float | None:
+    try:
+        out = subprocess.check_output(
+            [
+                "ffprobe", "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(path),
+            ],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        return round(float(out), 2)
+    except (subprocess.CalledProcessError, ValueError):
+        return None
 
 root = Path(".")
 tracks = []
@@ -49,14 +66,18 @@ for folder in sorted(root.iterdir()):
     m = re.match(r"^(\d+)\s+(.+?)\s*\[", name)
     num = int(m.group(1)) if m else 999
     title = m.group(2).strip() if m else name
-    tracks.append({
+    dur = mp3_duration(vocals) or mp3_duration(guitar)
+    entry = {
         "id": folder.name,
         "num": num,
         "title": title,
         "folder": folder.name,
         "vocals": f"{folder.name}/vocals.mp3",
         "guitar": f"{folder.name}/guitar.mp3",
-    })
+    }
+    if dur is not None:
+        entry["duration_sec"] = dur
+    tracks.append(entry)
 
 tracks.sort(key=lambda t: t["num"])
 manifest = {
