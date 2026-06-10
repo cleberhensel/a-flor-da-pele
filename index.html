@@ -553,6 +553,13 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 250;
+      opacity: 0;
+      transition: opacity .35s ease;
+      pointer-events: none;
+    }
+
+    .scene.fs-viz.viz-ui-visible .fs-mute-group {
+      opacity: 1;
       pointer-events: auto;
     }
 
@@ -595,7 +602,7 @@
     }
 
     .scene.fs-viz .stem-panel.vocals {
-      border-right: 1px solid rgba(232,160,144,.07);
+      border-right: none;
     }
 
     .scene.fs-viz .viz-area {
