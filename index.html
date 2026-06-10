@@ -125,7 +125,7 @@
     }
 
     .cover-hero {
-      padding: 1rem 1rem 0;
+      padding: 1rem 0.5rem 0;
       flex-shrink: 0;
     }
 
@@ -254,11 +254,14 @@
       gap: .75rem;
     }
 
-    .fs-chrome-right {
+    .viz-toolbar {
       display: flex;
-      align-items: flex-start;
-      gap: .3rem;
+      align-items: center;
+      justify-content: flex-end;
+      gap: .15rem;
       flex-shrink: 0;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .now-title h2 {
@@ -291,11 +294,16 @@
 
     .viz-row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
-      justify-content: flex-end;
       gap: .15rem;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
+
+    .viz-row::-webkit-scrollbar { display: none; }
 
     .viz-row-sep {
       width: 1px;
@@ -477,6 +485,8 @@
 
     .scene.fs-viz .viz-picker { align-items: flex-start; }
 
+    .scene.fs-viz .viz-toolbar { justify-content: flex-start; }
+
     .scene.fs-viz .viz-row { justify-content: flex-start; }
 
     .scene.fs-viz #track-sub { display: none; }
@@ -514,9 +524,9 @@
     }
 
     .stem-mute-toggle.muted {
-      color: var(--peach);
-      border-color: rgba(232,160,144,.35);
-      opacity: .65;
+      opacity: .45;
+      color: var(--muted);
+      border-color: var(--glass-border);
     }
 
     .stem-mute-toggle svg {
@@ -529,29 +539,40 @@
     .stem-mute-toggle.muted .icon-on { display: none; }
     .stem-mute-toggle.muted .icon-muted { display: block; }
 
-    .scene.fs-viz .stem-mute-toggle {
-      display: inline-flex;
+    .fs-mute-group {
+      display: none;
+    }
+
+    .scene.fs-viz .fs-mute-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: .4rem;
       position: fixed;
       top: 200px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 250;
       pointer-events: auto;
+    }
+
+    .scene.fs-viz .fs-mute-group .stem-mute-toggle {
+      display: inline-flex;
+      position: static;
       background: rgba(3, 2, 2, 0.72);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
 
-    .scene.fs-viz .stem-panel.vocals .stem-mute-toggle {
-      right: calc(50% + .3rem);
-      left: auto;
+    .stem-mute-toggle.vocals:not(.muted) {
+      color: var(--vocals);
+      border-color: rgba(232,160,144,.28);
     }
 
-    .scene.fs-viz .stem-panel.guitar .stem-mute-toggle {
-      left: calc(50% + .3rem);
-      right: auto;
+    .stem-mute-toggle.guitar:not(.muted) {
+      color: var(--guitar);
+      border-color: rgba(201,184,150,.28);
     }
-
-    .stem-panel.vocals .stem-mute-toggle { right: .5rem; }
-    .stem-panel.guitar .stem-mute-toggle { left: .5rem; }
 
     .scene.fs-viz .stem-head,
     .scene.fs-viz .stem-status { display: none; }
@@ -823,7 +844,36 @@
     .ctrl-btns {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: .85rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .ctrl-btns-core {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+
+    .mobile-mute-group,
+    .mobile-fs-group {
+      display: none;
+      align-items: center;
+      gap: .35rem;
+    }
+
+    .mobile-fs-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+
+    .mobile-fs-btn:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.08);
     }
 
     .btn {
@@ -904,6 +954,48 @@
 
     .mix-hint span { color: var(--peach); }
 
+    .mobile-stem-mute {
+      display: none;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color .12s, background .12s, border-color .12s, opacity .12s;
+    }
+
+    .mobile-stem-mute svg {
+      width: 17px;
+      height: 17px;
+      display: block;
+    }
+
+    .mobile-stem-mute .icon-muted { display: none; }
+    .mobile-stem-mute.muted .icon-on { display: none; }
+    .mobile-stem-mute.muted .icon-muted { display: block; }
+
+    .mobile-stem-mute.vocals:not(.muted) {
+      color: var(--vocals);
+      border-color: rgba(232,160,144,.28);
+    }
+
+    .mobile-stem-mute.guitar:not(.muted) {
+      color: var(--guitar);
+      border-color: rgba(201,184,150,.28);
+    }
+
+    .mobile-stem-mute.muted {
+      opacity: .45;
+      color: var(--muted);
+      border-color: var(--glass-border);
+    }
+
     .loading {
       padding: 2rem;
       color: var(--muted);
@@ -916,24 +1008,77 @@
         grid-template-columns: 1fr;
         padding: .75rem .75rem 0;
       }
+
       .sidebar,
       .main { max-height: none; }
+
       .cover-hero { padding: .75rem .75rem 0; }
-      .cover-large { max-width: 220px; margin: 0 auto; }
+
+      .cover-large {
+        max-width: 220px;
+        margin: 0 auto;
+      }
+
       .stems-split { grid-template-columns: 1fr; }
-      .stem-panel.vocals { border-right: none; border-bottom: 1px solid var(--glass-border); }
+
+      .stem-panel.vocals {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
       .now-title-top { flex-direction: column; }
-      .fs-chrome-left { flex-direction: column; width: 100%; }
+
+      .fs-chrome-left {
+        flex-direction: column;
+        width: 100%;
+      }
+
       .viz-picker { align-items: flex-start; }
+
+      .viz-toolbar {
+        justify-content: flex-start;
+        width: 100%;
+      }
+
       .viz-row { justify-content: flex-start; }
+
+      #btn-fs-enter,
+      #btn-fs-exit { display: none; }
+
       .player {
         grid-template-columns: 1fr;
         height: auto;
         padding: .75rem 1rem 1rem;
         gap: .5rem;
       }
+
       .mix-hint { display: none; }
+
       .np-mini { justify-content: center; }
+
+      .mobile-mute-group {
+        display: flex;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .mobile-fs-group {
+        display: flex;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .mobile-fs-btn { display: inline-flex; }
+
+      .mobile-stem-mute { display: inline-flex; }
+
+      .ctrl-btns { padding: 0 2.75rem; }
+
+      .ctrl-btns-core { gap: .55rem; }
     }
   </style>
 </head>
@@ -988,49 +1133,57 @@
                 </button>
               </div>
               <div class="viz-picker" role="group" aria-label="Tipo de visualização">
-                <div class="viz-row" role="group" aria-label="Modos de visualização">
-                  <button type="button" class="viz-btn active" data-viz="bars" title="Barras" aria-label="Barras">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="11" width="3.5" height="9" rx="1"/><rect x="10.25" y="7" width="3.5" height="13" rx="1"/><rect x="16.5" y="13" width="3.5" height="7" rx="1"/></svg>
-                  </button>
-                  <button type="button" class="viz-btn" data-viz="wave" title="Onda" aria-label="Onda">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 12c2.5-3.5 4.5-3.5 7 0s4.5 3.5 7 0 4.5-3.5 7 0"/></svg>
-                  </button>
-                  <button type="button" class="viz-btn" data-viz="spectrum" title="Espectro" aria-label="Espectro">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="14" width="2" height="7" rx=".5"/><rect x="6.5" y="10" width="2" height="11" rx=".5"/><rect x="10" y="12" width="2" height="9" rx=".5"/><rect x="13.5" y="7" width="2" height="14" rx=".5"/><rect x="17" y="11" width="2" height="10" rx=".5"/><rect x="20.5" y="9" width="2" height="12" rx=".5"/></svg>
-                  </button>
+                <div class="viz-toolbar">
+                  <div class="viz-row" role="group" aria-label="Modos de visualização">
+                    <button type="button" class="viz-btn active" data-viz="bars" title="Barras" aria-label="Barras">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="11" width="3.5" height="9" rx="1"/><rect x="10.25" y="7" width="3.5" height="13" rx="1"/><rect x="16.5" y="13" width="3.5" height="7" rx="1"/></svg>
+                    </button>
+                    <button type="button" class="viz-btn" data-viz="wave" title="Onda" aria-label="Onda">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 12c2.5-3.5 4.5-3.5 7 0s4.5 3.5 7 0 4.5-3.5 7 0"/></svg>
+                    </button>
+                    <button type="button" class="viz-btn" data-viz="spectrum" title="Espectro" aria-label="Espectro">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="14" width="2" height="7" rx=".5"/><rect x="6.5" y="10" width="2" height="11" rx=".5"/><rect x="10" y="12" width="2" height="9" rx=".5"/><rect x="13.5" y="7" width="2" height="14" rx=".5"/><rect x="17" y="11" width="2" height="10" rx=".5"/><rect x="20.5" y="9" width="2" height="12" rx=".5"/></svg>
+                    </button>
+                    <span class="viz-row-sep" aria-hidden="true"></span>
+                    <button type="button" class="viz-btn" data-viz="mandala" title="Mandala" aria-label="Mandala">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+                    </button>
+                    <button type="button" class="viz-btn" data-viz="psyche" title="Caleidoscópio" aria-label="Caleidoscópio">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.7L12 15.5 6.4 19.5l2.1-6.7L3 8.8h6.8z"/></svg>
+                    </button>
+                    <button type="button" class="viz-btn" data-viz="tunnel" title="Túnel" aria-label="Túnel">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><ellipse cx="12" cy="12" rx="9" ry="5"/><ellipse cx="12" cy="12" rx="6" ry="3.3"/><ellipse cx="12" cy="12" rx="3" ry="1.6"/></svg>
+                    </button>
+                    <button type="button" class="viz-btn" data-viz="particles" title="Partículas" aria-label="Partículas">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="8" r="1.6"/><circle cx="12" cy="5" r="2"/><circle cx="18" cy="9" r="1.4"/><circle cx="9" cy="14" r="1.8"/><circle cx="16" cy="16" r="1.5"/><circle cx="5" cy="17" r="1.2"/></svg>
+                    </button>
+                  </div>
                   <span class="viz-row-sep" aria-hidden="true"></span>
-                  <button type="button" class="viz-btn" data-viz="mandala" title="Mandala" aria-label="Mandala">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+                  <button type="button" class="btn-fs btn-fs-expand" id="btn-fs-enter" title="Ecrã inteiro" aria-label="Ecrã inteiro">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
                   </button>
-                  <button type="button" class="viz-btn" data-viz="psyche" title="Caleidoscópio" aria-label="Caleidoscópio">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.7L12 15.5 6.4 19.5l2.1-6.7L3 8.8h6.8z"/></svg>
-                  </button>
-                  <button type="button" class="viz-btn" data-viz="tunnel" title="Túnel" aria-label="Túnel">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><ellipse cx="12" cy="12" rx="9" ry="5"/><ellipse cx="12" cy="12" rx="6" ry="3.3"/><ellipse cx="12" cy="12" rx="3" ry="1.6"/></svg>
-                  </button>
-                  <button type="button" class="viz-btn" data-viz="particles" title="Partículas" aria-label="Partículas">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="8" r="1.6"/><circle cx="12" cy="5" r="2"/><circle cx="18" cy="9" r="1.4"/><circle cx="9" cy="14" r="1.8"/><circle cx="16" cy="16" r="1.5"/><circle cx="5" cy="17" r="1.2"/></svg>
+                  <button type="button" class="btn-fs btn-fs-exit" id="btn-fs-exit" title="Sair do ecrã inteiro" aria-label="Sair do ecrã inteiro">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M21 9V5a2 2 0 0 0-2-2h-4M3 15v4a2 2 0 0 0 2 2h4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
                   </button>
                 </div>
               </div>
             </div>
-            <div class="fs-chrome-right">
-              <button type="button" class="btn-fs btn-fs-expand" id="btn-fs-enter" title="Ecrã inteiro" aria-label="Ecrã inteiro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-              </button>
-              <button type="button" class="btn-fs btn-fs-exit" id="btn-fs-exit" title="Sair do ecrã inteiro" aria-label="Sair do ecrã inteiro">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M21 9V5a2 2 0 0 0-2-2h-4M3 15v4a2 2 0 0 0 2 2h4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
-              </button>
-            </div>
           </div>
+        </div>
+
+        <div class="fs-mute-group" id="fs-mute-group" aria-hidden="true">
+          <button type="button" class="stem-mute-toggle vocals" id="mute-fs-vocals" aria-pressed="false" aria-label="Mudo voz" title="Voz">
+            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="10" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="10" rx="3"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+          </button>
+          <button type="button" class="stem-mute-toggle guitar" id="mute-fs-guitar" aria-pressed="false" aria-label="Mudo violão" title="Violão">
+            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="2.5"/><ellipse cx="12" cy="17" rx="4.5" ry="3.5"/><line x1="12" y1="10.5" x2="12" y2="13.5"/></svg>
+            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="2.5"/><ellipse cx="12" cy="17" rx="4.5" ry="3.5"/><line x1="12" y1="10.5" x2="12" y2="13.5"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+          </button>
         </div>
 
         <div class="stems-split" id="stems-split">
           <section class="stem-panel vocals" aria-label="Canal de voz">
-            <button type="button" class="stem-mute-toggle" id="mute-fs-vocals" aria-pressed="false" aria-label="Mudo voz" title="Mudo voz">
-              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M17.5 6.5a8 8 0 0 1 0 11"/></svg>
-              <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><line x1="18" y1="8" x2="22" y2="16"/><line x1="22" y1="8" x2="18" y2="16"/></svg>
-            </button>
             <div class="stem-head">
               <div class="stem-label">
                 <span class="stem-dot"></span>
@@ -1049,10 +1202,6 @@
           </section>
 
           <section class="stem-panel guitar" aria-label="Canal de violão">
-            <button type="button" class="stem-mute-toggle" id="mute-fs-guitar" aria-pressed="false" aria-label="Mudo violão" title="Mudo violão">
-              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M17.5 6.5a8 8 0 0 1 0 11"/></svg>
-              <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><line x1="18" y1="8" x2="22" y2="16"/><line x1="22" y1="8" x2="18" y2="16"/></svg>
-            </button>
             <div class="stem-head">
               <div class="stem-label">
                 <span class="stem-dot"></span>
@@ -1086,16 +1235,33 @@
 
       <div class="controls">
         <div class="ctrl-btns">
-          <button class="btn" id="btn-prev" type="button" aria-label="Anterior">
-            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-          </button>
-          <button class="btn btn-play" id="btn-play" type="button" aria-label="Play">
-            <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-          </button>
-          <button class="btn" id="btn-next" type="button" aria-label="Próxima">
-            <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-          </button>
+          <div class="mobile-fs-group">
+            <button type="button" class="btn-fs mobile-fs-btn btn-fs-expand" id="btn-fs-mobile" title="Ecrã inteiro" aria-label="Ecrã inteiro">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            </button>
+          </div>
+          <div class="ctrl-btns-core">
+            <button class="btn" id="btn-prev" type="button" aria-label="Anterior">
+              <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button class="btn btn-play" id="btn-play" type="button" aria-label="Play">
+              <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg id="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <button class="btn" id="btn-next" type="button" aria-label="Próxima">
+              <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+          </div>
+          <div class="mobile-mute-group">
+            <button type="button" class="mobile-stem-mute vocals" id="mute-mobile-vocals" aria-pressed="false" aria-label="Mudo voz" title="Voz">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="10" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="10" rx="3"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+            </button>
+            <button type="button" class="mobile-stem-mute guitar" id="mute-mobile-guitar" aria-pressed="false" aria-label="Mudo violão" title="Violão">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="2.5"/><ellipse cx="12" cy="17" rx="4.5" ry="3.5"/><line x1="12" y1="10.5" x2="12" y2="13.5"/></svg>
+              <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="2.5"/><ellipse cx="12" cy="17" rx="4.5" ry="3.5"/><line x1="12" y1="10.5" x2="12" y2="13.5"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+            </button>
+          </div>
         </div>
         <div class="progress-wrap">
           <span class="time" id="time-current">0:00</span>
@@ -1165,6 +1331,8 @@
       muteGuitar: document.getElementById("mute-guitar"),
       muteFsVocals: document.getElementById("mute-fs-vocals"),
       muteFsGuitar: document.getElementById("mute-fs-guitar"),
+      muteMobileVocals: document.getElementById("mute-mobile-vocals"),
+      muteMobileGuitar: document.getElementById("mute-mobile-guitar"),
       volVocals: document.getElementById("vol-vocals"),
       volGuitar: document.getElementById("vol-guitar"),
       statusVocals: document.getElementById("status-vocals"),
@@ -1180,6 +1348,7 @@
       albumArtists: document.getElementById("album-artists"),
       btnFsEnter: document.getElementById("btn-fs-enter"),
       btnFsExit: document.getElementById("btn-fs-exit"),
+      btnFsMobile: document.getElementById("btn-fs-mobile"),
       stemsSplit: document.getElementById("stems-split"),
       fsPrev: document.getElementById("fs-prev"),
       fsPlay: document.getElementById("fs-play"),
@@ -1223,15 +1392,28 @@
       return Boolean(el._userMuted);
     }
 
+    function stemVolume(volInput) {
+      const vol = Number(volInput.value);
+      return Number.isFinite(vol) ? Math.max(0, Math.min(1, vol)) : 1;
+    }
+
+    function applyStemOutput(el, volInput) {
+      const muted = isStemMuted(el);
+      const vol = stemVolume(volInput);
+      // Nunca usar el.muted=true: elementos ligados ao Web Audio ficam presos em silêncio.
+      el.muted = false;
+      if (el._gain && audioCtx) {
+        const gainParam = el._gain.gain;
+        gainParam.cancelScheduledValues(audioCtx.currentTime);
+        gainParam.setValueAtTime(muted ? 0 : vol, audioCtx.currentTime);
+      } else {
+        el.volume = muted ? 0 : vol;
+      }
+    }
+
     function setStemMuted(el, volInput, muted) {
       el._userMuted = muted;
-      if (el._gain) {
-        el.muted = false;
-        el._gain.gain.value = muted ? 0 : Number(volInput.value);
-      } else {
-        el.muted = muted;
-        el.volume = muted ? 0 : Number(volInput.value);
-      }
+      applyStemOutput(el, volInput);
     }
 
     function updateMixLabel() {
@@ -1254,6 +1436,8 @@
 
     async function ensureAudioGraph() {
       if (audioCtx) return;
+      vocalsEl.muted = false;
+      guitarEl.muted = false;
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
       const vSource = audioCtx.createMediaElementSource(vocalsEl);
@@ -1283,8 +1467,8 @@
     }
 
     function applyStemGain() {
-      setStemMuted(vocalsEl, els.volVocals, isStemMuted(vocalsEl));
-      setStemMuted(guitarEl, els.volGuitar, isStemMuted(guitarEl));
+      applyStemOutput(vocalsEl, els.volVocals);
+      applyStemOutput(guitarEl, els.volGuitar);
       updateMixLabel();
     }
 
@@ -1304,6 +1488,14 @@
       if (els.muteFsGuitar) {
         els.muteFsGuitar.classList.toggle("muted", gMuted);
         els.muteFsGuitar.setAttribute("aria-pressed", String(gMuted));
+      }
+      if (els.muteMobileVocals) {
+        els.muteMobileVocals.classList.toggle("muted", vMuted);
+        els.muteMobileVocals.setAttribute("aria-pressed", String(vMuted));
+      }
+      if (els.muteMobileGuitar) {
+        els.muteMobileGuitar.classList.toggle("muted", gMuted);
+        els.muteMobileGuitar.setAttribute("aria-pressed", String(gMuted));
       }
     }
 
@@ -1804,6 +1996,7 @@
         const durEl = els.trackList.querySelector(`[data-idx="${index}"] .track-dur`);
         if (durEl) durEl.textContent = formatTime(duration);
         if (loaded >= 2) {
+          applyStemGain();
           els.statusVocals.textContent = isStemMuted(vocalsEl) ? "Voz (muda)" : "Voz ativa";
           els.statusGuitar.textContent = isStemMuted(guitarEl) ? "Violão (mudo)" : "Violão ativo";
           if (autoplay) play();
@@ -1823,6 +2016,7 @@
       }
       await ensureAudioGraph();
       if (audioCtx.state === "suspended") await audioCtx.resume();
+      applyStemGain();
 
       const t = vocalsEl.currentTime;
       guitarEl.currentTime = t;
@@ -1930,6 +2124,9 @@
       toggleGuitarMute();
     });
 
+    els.muteMobileVocals.addEventListener("click", toggleVocalsMute);
+    els.muteMobileGuitar.addEventListener("click", toggleGuitarMute);
+
     els.volVocals.addEventListener("input", applyStemGain);
     els.volGuitar.addEventListener("input", applyStemGain);
 
@@ -1942,6 +2139,7 @@
 
     els.btnFsEnter.addEventListener("click", enterFsViz);
     els.btnFsExit.addEventListener("click", exitFsViz);
+    if (els.btnFsMobile) els.btnFsMobile.addEventListener("click", enterFsViz);
     els.stemsSplit.addEventListener("dblclick", toggleFsViz);
     els.scene.addEventListener("mousemove", showFsUi);
     els.fsPrev.addEventListener("click", () => { showFsUi(); els.btnPrev.click(); });
