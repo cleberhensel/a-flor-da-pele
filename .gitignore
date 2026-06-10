@@ -1,0 +1,15 @@
+# Áudio bruto (só MP3 no repo)
+*.wav
+*.flac
+*.aiff
+
+# Transcrições e ferramentas locais
+transcricao/
+arranjo/
+*.mid
+*.gp5
+*.tab.txt
+*.alphatex.txt
+
+# macOS
+.DS_Store

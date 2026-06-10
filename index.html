@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Flor da Pele — Raphael Rabello & Ney Matogrosso</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #181c28;
+      --surface-2: #1f2535;
+      --border: #2d3548;
+      --text: #eef1f8;
+      --muted: #8b95ab;
+      --vocals: #e85d75;
+      --vocals-dim: rgba(232, 93, 117, 0.15);
+      --guitar: #4dabf7;
+      --guitar-dim: rgba(77, 171, 247, 0.15);
+      --accent: #69db7c;
+      --player-h: 108px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: var(--player-h);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(240px, 300px) 1fr;
+      min-height: calc(100vh - var(--player-h));
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .sidebar header {
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: .35rem;
+    }
+
+    .sidebar .artists {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .track-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding: .5rem;
+    }
+
+    .track-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: .65rem;
+      align-items: center;
+      padding: .55rem .65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .12s;
+    }
+
+    .track-list li:hover { background: var(--surface-2); }
+    .track-list li.active { background: var(--surface-2); }
+    .track-list li.active .track-title { color: var(--accent); }
+
+    .track-num {
+      color: var(--muted);
+      font-size: .78rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .track-title {
+      font-size: .88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-dur {
+      color: var(--muted);
+      font-size: .72rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+    }
+
+    .now-title {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .now-title h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .now-title p {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: .2rem;
+    }
+
+    .stems-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 280px;
+    }
+
+    .stem-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stem-panel.vocals {
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--vocals-dim) 0%, transparent 55%);
+    }
+
+    .stem-panel.guitar {
+      background: linear-gradient(180deg, var(--guitar-dim) 0%, transparent 55%);
+    }
+
+    .stem-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .75rem;
+    }
+
+    .stem-label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .95rem;
+      font-weight: 600;
+    }
+
+    .stem-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .vocals .stem-dot { background: var(--vocals); }
+    .guitar .stem-dot { background: var(--guitar); }
+
+    .stem-actions {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .btn-mute {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 999px;
+      padding: .3rem .75rem;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: background .12s, opacity .12s;
+    }
+
+    .btn-mute:hover { background: #2a3348; }
+    .btn-mute.muted { opacity: .55; text-decoration: line-through; }
+
+    .stem-vol {
+      width: 72px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .meter-wrap {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      min-height: 120px;
+      padding: .5rem 0;
+    }
+
+    .meter-bar {
+      flex: 1;
+      background: var(--surface-2);
+      border-radius: 3px 3px 0 0;
+      min-height: 4px;
+      transform-origin: bottom;
+      transition: height .05s linear;
+    }
+
+    .vocals .meter-bar.active { background: var(--vocals); }
+    .guitar .meter-bar.active { background: var(--guitar); }
+
+    .stem-status {
+      color: var(--muted);
+      font-size: .75rem;
+      margin-top: .5rem;
+    }
+
+    .player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--player-h);
+      background: #141820;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 1rem;
+      z-index: 50;
+    }
+
+    .np-mini {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      min-width: 0;
+    }
+
+    .np-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--vocals), var(--guitar));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .np-badge svg { width: 20px; height: 20px; fill: #fff; }
+
+    .np-text { min-width: 0; }
+    .np-text .t {
+      font-size: .85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .np-text .s {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .45rem;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .ctrl-btns {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+
+    .btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: .2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .12s, transform .1s;
+    }
+
+    .btn:hover { color: var(--text); }
+    .btn:active { transform: scale(.92); }
+    .btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .btn-play {
+      width: 42px;
+      height: 42px;
+      background: var(--text);
+      color: #111;
+      border-radius: 50%;
+    }
+
+    .btn-play:hover {
+      background: var(--accent);
+      color: #111;
+      transform: scale(1.04);
+    }
+
+    .btn-play svg { width: 20px; height: 20px; }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      width: 100%;
+    }
+
+    .time {
+      font-size: .7rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 36px;
+    }
+
+    .time.end { text-align: right; }
+
+    .progress-bar {
+      flex: 1;
+      height: 5px;
+      background: #333a4d;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-bar:hover { height: 7px; }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 3px;
+      pointer-events: none;
+    }
+
+    .mix-hint {
+      text-align: right;
+      font-size: .72rem;
+      color: var(--muted);
+    }
+
+    .mix-hint span { color: var(--accent); }
+
+    .loading {
+      padding: 2rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { max-height: 220px; }
+      .stems-split { grid-template-columns: 1fr; }
+      .stem-panel.vocals { border-right: none; border-bottom: 1px solid var(--border); }
+      .player {
+        grid-template-columns: 1fr;
+        height: auto;
+        padding: .75rem 1rem 1rem;
+        gap: .5rem;
+      }
+      .mix-hint { display: none; }
+      .np-mini { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <header>
+        <h1 id="album-title">A Flor da Pele</h1>
+        <p class="artists" id="album-artists">Raphael Rabello & Ney Matogrosso</p>
+      </header>
+      <ul class="track-list" id="track-list">
+        <li class="loading">A carregar faixas…</li>
+      </ul>
+    </aside>
+
+    <div class="main">
+      <div class="now-title">
+        <h2 id="track-title">Selecione uma faixa</h2>
+        <p id="track-sub">Voz e violão em stems separados — tocam em simultâneo</p>
+      </div>
+
+      <div class="stems-split">
+        <section class="stem-panel vocals" aria-label="Canal de voz">
+          <div class="stem-head">
+            <div class="stem-label">
+              <span class="stem-dot"></span>
+              Voz
+            </div>
+            <div class="stem-actions">
+              <button type="button" class="btn-mute" id="mute-vocals" aria-pressed="false">Mudo</button>
+              <input type="range" class="stem-vol" id="vol-vocals" min="0" max="1" step="0.01" value="1" aria-label="Volume voz">
+            </div>
+          </div>
+          <div class="meter-wrap" id="meter-vocals" aria-hidden="true"></div>
+          <p class="stem-status" id="status-vocals">Aguardando faixa</p>
+        </section>
+
+        <section class="stem-panel guitar" aria-label="Canal de violão">
+          <div class="stem-head">
+            <div class="stem-label">
+              <span class="stem-dot"></span>
+              Violão
+            </div>
+            <div class="stem-actions">
+              <button type="button" class="btn-mute" id="mute-guitar" aria-pressed="false">Mudo</button>
+              <input type="range" class="stem-vol" id="vol-guitar" min="0" max="1" step="0.01" value="1" aria-label="Volume violão">
+            </div>
+          </div>
+          <div class="meter-wrap" id="meter-guitar" aria-hidden="true"></div>
+          <p class="stem-status" id="status-guitar">Aguardando faixa</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="player">
+    <div class="np-mini">
+      <div class="np-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+      </div>
+      <div class="np-text">
+        <div class="t" id="np-title">—</div>
+        <div class="s" id="np-stems">Voz + Violão</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl-btns">
+        <button class="btn" id="btn-prev" type="button" aria-label="Anterior">
+          <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="btn btn-play" id="btn-play" type="button" aria-label="Play">
+          <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="btn" id="btn-next" type="button" aria-label="Próxima">
+          <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+      <div class="progress-wrap">
+        <span class="time" id="time-current">0:00</span>
+        <div class="progress-bar" id="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="time end" id="time-total">0:00</span>
+      </div>
+    </div>
+
+    <div class="mix-hint">
+      Mix: <span id="mix-label">Voz + Violão</span>
+    </div>
+  </div>
+
+  <script>
+    const METER_BARS = 24;
+    const SYNC_THRESHOLD = 0.04;
+
+    let manifest = null;
+    let currentIndex = -1;
+    let duration = 0;
+    let rafId = null;
+
+    const vocalsEl = new Audio();
+    const guitarEl = new Audio();
+    vocalsEl.preload = "auto";
+    guitarEl.preload = "auto";
+
+    let audioCtx = null;
+    let vocalsAnalyser = null;
+    let guitarAnalyser = null;
+
+    const els = {
+      trackList: document.getElementById("track-list"),
+      trackTitle: document.getElementById("track-title"),
+      trackSub: document.getElementById("track-sub"),
+      npTitle: document.getElementById("np-title"),
+      npStems: document.getElementById("np-stems"),
+      mixLabel: document.getElementById("mix-label"),
+      btnPlay: document.getElementById("btn-play"),
+      btnPrev: document.getElementById("btn-prev"),
+      btnNext: document.getElementById("btn-next"),
+      iconPlay: document.getElementById("icon-play"),
+      iconPause: document.getElementById("icon-pause"),
+      progressBar: document.getElementById("progress-bar"),
+      progressFill: document.getElementById("progress-fill"),
+      timeCurrent: document.getElementById("time-current"),
+      timeTotal: document.getElementById("time-total"),
+      muteVocals: document.getElementById("mute-vocals"),
+      muteGuitar: document.getElementById("mute-guitar"),
+      volVocals: document.getElementById("vol-vocals"),
+      volGuitar: document.getElementById("vol-guitar"),
+      statusVocals: document.getElementById("status-vocals"),
+      statusGuitar: document.getElementById("status-guitar"),
+      meterVocals: document.getElementById("meter-vocals"),
+      meterGuitar: document.getElementById("meter-guitar"),
+      albumTitle: document.getElementById("album-title"),
+      albumArtists: document.getElementById("album-artists"),
+    };
+
+    const vocalsBars = buildMeter(els.meterVocals);
+    const guitarBars = buildMeter(els.meterGuitar);
+
+    function buildMeter(container) {
+      container.innerHTML = "";
+      const bars = [];
+      for (let i = 0; i < METER_BARS; i++) {
+        const bar = document.createElement("div");
+        bar.className = "meter-bar";
+        bar.style.height = "4px";
+        container.appendChild(bar);
+        bars.push(bar);
+      }
+      return bars;
+    }
+
+    function formatTime(s) {
+      if (!s || !isFinite(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ":" + String(sec).padStart(2, "0");
+    }
+
+    function enc(path) {
+      return path.split("/").map(encodeURIComponent).join("/");
+    }
+
+    function updateMixLabel() {
+      const parts = [];
+      if (!vocalsEl.muted && els.volVocals.value > 0) parts.push("Voz");
+      if (!guitarEl.muted && els.volGuitar.value > 0) parts.push("Violão");
+      const label = parts.length ? parts.join(" + ") : "Silêncio";
+      els.mixLabel.textContent = label;
+      els.npStems.textContent = label;
+    }
+
+    function setPlayIcon(playing) {
+      els.iconPlay.style.display = playing ? "none" : "block";
+      els.iconPause.style.display = playing ? "block" : "none";
+    }
+
+    async function ensureAudioGraph() {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const vSource = audioCtx.createMediaElementSource(vocalsEl);
+      const gSource = audioCtx.createMediaElementSource(guitarEl);
+
+      vocalsAnalyser = audioCtx.createAnalyser();
+      guitarAnalyser = audioCtx.createAnalyser();
+      vocalsAnalyser.fftSize = 64;
+      guitarAnalyser.fftSize = 64;
+
+      const vGain = audioCtx.createGain();
+      const gGain = audioCtx.createGain();
+
+      vSource.connect(vocalsAnalyser);
+      vocalsAnalyser.connect(vGain);
+      vGain.connect(audioCtx.destination);
+
+      gSource.connect(guitarAnalyser);
+      guitarAnalyser.connect(gGain);
+      gGain.connect(audioCtx.destination);
+
+      vocalsEl._gain = vGain;
+      guitarEl._gain = gGain;
+    }
+
+    function applyStemGain() {
+      if (vocalsEl._gain) {
+        vocalsEl._gain.gain.value = vocalsEl.muted ? 0 : Number(els.volVocals.value);
+      } else {
+        vocalsEl.volume = vocalsEl.muted ? 0 : Number(els.volVocals.value);
+      }
+      if (guitarEl._gain) {
+        guitarEl._gain.gain.value = guitarEl.muted ? 0 : Number(els.volGuitar.value);
+      } else {
+        guitarEl.volume = guitarEl.muted ? 0 : Number(els.volGuitar.value);
+      }
+      updateMixLabel();
+    }
+
+    function updateMuteButtons() {
+      els.muteVocals.classList.toggle("muted", vocalsEl.muted);
+      els.muteGuitar.classList.toggle("muted", guitarEl.muted);
+      els.muteVocals.setAttribute("aria-pressed", String(vocalsEl.muted));
+      els.muteGuitar.setAttribute("aria-pressed", String(guitarEl.muted));
+      els.muteVocals.textContent = vocalsEl.muted ? "Mudo ✓" : "Mudo";
+      els.muteGuitar.textContent = guitarEl.muted ? "Mudo ✓" : "Mudo";
+    }
+
+    function paintMeter(analyser, bars) {
+      if (!analyser) return;
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(data);
+      const step = Math.floor(data.length / bars.length);
+      bars.forEach((bar, i) => {
+        const v = data[i * step] / 255;
+        const h = Math.max(4, v * 100);
+        bar.style.height = h + "%";
+        bar.classList.toggle("active", v > 0.08);
+      });
+    }
+
+    function tickMeters() {
+      paintMeter(vocalsAnalyser, vocalsBars);
+      paintMeter(guitarAnalyser, guitarBars);
+      rafId = requestAnimationFrame(tickMeters);
+    }
+
+    function syncStems(master = vocalsEl, slave = guitarEl) {
+      const drift = Math.abs(master.currentTime - slave.currentTime);
+      if (drift > SYNC_THRESHOLD) {
+        slave.currentTime = master.currentTime;
+      }
+    }
+
+    function setActiveListItem(index) {
+      els.trackList.querySelectorAll("li").forEach((li, i) => {
+        li.classList.toggle("active", i === index);
+      });
+    }
+
+    function loadTrack(index, autoplay = false) {
+      if (!manifest || index < 0 || index >= manifest.tracks.length) return;
+      const track = manifest.tracks[index];
+      currentIndex = index;
+
+      vocalsEl.pause();
+      guitarEl.pause();
+
+      vocalsEl.src = enc(track.vocals);
+      guitarEl.src = enc(track.guitar);
+
+      els.trackTitle.textContent = track.num + ". " + track.title;
+      els.trackSub.textContent = "Stems sincronizados — Raphael Rabello & Ney Matogrosso";
+      els.npTitle.textContent = track.title;
+      els.statusVocals.textContent = "A carregar voz…";
+      els.statusGuitar.textContent = "A carregar violão…";
+      setActiveListItem(index);
+
+      let loaded = 0;
+      const onMeta = () => {
+        loaded++;
+        duration = Math.max(vocalsEl.duration || 0, guitarEl.duration || 0);
+        els.timeTotal.textContent = formatTime(duration);
+        const durEl = els.trackList.querySelector(`[data-idx="${index}"] .track-dur`);
+        if (durEl) durEl.textContent = formatTime(duration);
+        if (loaded >= 2) {
+          els.statusVocals.textContent = vocalsEl.muted ? "Voz (muda)" : "Voz ativa";
+          els.statusGuitar.textContent = guitarEl.muted ? "Violão (mudo)" : "Violão ativo";
+          if (autoplay) play();
+        }
+      };
+
+      vocalsEl.onloadedmetadata = onMeta;
+      guitarEl.onloadedmetadata = onMeta;
+      vocalsEl.load();
+      guitarEl.load();
+    }
+
+    async function play() {
+      if (currentIndex < 0 && manifest?.tracks.length) {
+        loadTrack(0, true);
+        return;
+      }
+      await ensureAudioGraph();
+      if (audioCtx.state === "suspended") await audioCtx.resume();
+
+      const t = vocalsEl.currentTime;
+      guitarEl.currentTime = t;
+
+      try {
+        await Promise.all([vocalsEl.play(), guitarEl.play()]);
+        setPlayIcon(true);
+        if (!rafId) tickMeters();
+      } catch (err) {
+        els.statusVocals.textContent = "Toque em Play (browser exige gesto do utilizador)";
+      }
+    }
+
+    function pause() {
+      vocalsEl.pause();
+      guitarEl.pause();
+      setPlayIcon(false);
+    }
+
+    function stop() {
+      pause();
+      vocalsEl.currentTime = 0;
+      guitarEl.currentTime = 0;
+    }
+
+    function seekTo(ratio) {
+      if (!duration) return;
+      const t = ratio * duration;
+      vocalsEl.currentTime = t;
+      guitarEl.currentTime = t;
+    }
+
+    function renderPlaylist() {
+      els.trackList.innerHTML = manifest.tracks.map((track, i) =>
+        `<li data-idx="${i}">
+          <span class="track-num">${track.num}</span>
+          <span class="track-title">${track.title}</span>
+          <span class="track-dur">—</span>
+        </li>`
+      ).join("");
+
+      els.trackList.querySelectorAll("li").forEach((li) => {
+        li.addEventListener("click", () => {
+          const idx = Number(li.dataset.idx);
+          if (idx === currentIndex && !vocalsEl.paused) {
+            pause();
+          } else {
+            loadTrack(idx, true);
+          }
+        });
+      });
+
+      manifest.tracks.forEach((track, i) => {
+        const probeV = new Audio();
+        probeV.preload = "metadata";
+        probeV.src = enc(track.vocals);
+        probeV.addEventListener("loadedmetadata", () => {
+          const durEl = els.trackList.querySelector(`[data-idx="${i}"] .track-dur`);
+          if (durEl && probeV.duration) durEl.textContent = formatTime(probeV.duration);
+        });
+      });
+    }
+
+    vocalsEl.addEventListener("timeupdate", () => {
+      syncStems(vocalsEl, guitarEl);
+      els.timeCurrent.textContent = formatTime(vocalsEl.currentTime);
+      const pct = duration ? (vocalsEl.currentTime / duration) * 100 : 0;
+      els.progressFill.style.width = pct + "%";
+    });
+
+    vocalsEl.addEventListener("ended", () => {
+      if (currentIndex < manifest.tracks.length - 1) {
+        loadTrack(currentIndex + 1, true);
+      } else {
+        setPlayIcon(false);
+      }
+    });
+
+    vocalsEl.addEventListener("play", () => setPlayIcon(true));
+    vocalsEl.addEventListener("pause", () => {
+      if (guitarEl.paused) setPlayIcon(false);
+    });
+
+    els.btnPlay.addEventListener("click", () => {
+      if (vocalsEl.paused) play();
+      else pause();
+    });
+
+    els.btnPrev.addEventListener("click", () => {
+      if (vocalsEl.currentTime > 3) {
+        seekTo(0);
+      } else if (currentIndex > 0) {
+        loadTrack(currentIndex - 1, true);
+      }
+    });
+
+    els.btnNext.addEventListener("click", () => {
+      if (currentIndex < manifest.tracks.length - 1) {
+        loadTrack(currentIndex + 1, true);
+      }
+    });
+
+    els.progressBar.addEventListener("click", (e) => {
+      const rect = els.progressBar.getBoundingClientRect();
+      seekTo((e.clientX - rect.left) / rect.width);
+    });
+
+    els.muteVocals.addEventListener("click", () => {
+      vocalsEl.muted = !vocalsEl.muted;
+      updateMuteButtons();
+      applyStemGain();
+      els.statusVocals.textContent = vocalsEl.muted ? "Voz (muda)" : "Voz ativa";
+    });
+
+    els.muteGuitar.addEventListener("click", () => {
+      guitarEl.muted = !guitarEl.muted;
+      updateMuteButtons();
+      applyStemGain();
+      els.statusGuitar.textContent = guitarEl.muted ? "Violão (mudo)" : "Violão ativo";
+    });
+
+    els.volVocals.addEventListener("input", applyStemGain);
+    els.volGuitar.addEventListener("input", applyStemGain);
+
+    fetch("manifest.json")
+      .then((r) => {
+        if (!r.ok) throw new Error("manifest");
+        return r.json();
+      })
+      .then((data) => {
+        manifest = data;
+        els.albumTitle.textContent = data.album;
+        els.albumArtists.textContent = data.artists;
+        renderPlaylist();
+        if (data.tracks.length) loadTrack(0, false);
+      })
+      .catch(() => {
+        els.trackList.innerHTML = "<li class='loading'>Erro ao carregar manifest.json. Use um servidor HTTP (não abra file://).</li>";
+      });
+
+    updateMuteButtons();
+    applyStemGain();
+  </script>
+</body>
+</html>
